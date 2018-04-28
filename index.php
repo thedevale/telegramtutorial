@@ -24,8 +24,7 @@
   $inlineUserId = $inlinequery['from']['id'];
   $inlinequerydata = $inlinequery['query'];
 
-  if(isset($update['inline_query']))
-  {
+  if(isset($update['inline_query'])) {
     gestisciInlineQuery($inlineid,$inlineUserId,$inlinequerydata,$inlinequery['from']['username'],$inlinequery['from']['first_name'],$inlinequery['from']['last_name']);
     exit();
   }
@@ -33,28 +32,24 @@
 
   $agg = json_encode($update,JSON_PRETTY_PRINT);
 
-  if($querydata == "StampaMessaggio")
-  {
+  if($querydata == "StampaMessaggio"){
     answerQuery($queryid,"Ciao $queryusername! Come stai?!");
     exit();
   }
-  if($querydata == "ModificaMessaggio")
-  {
+  if($querydata == "ModificaMessaggio"){
     editMessageText($queryUserId,$querymsgid,"HEYLA!");
     exit();
   }
 
 
-   if(strpos($text,"+")!==false)
-   {
+   if(strpos($text,"+")!==false){
           sendMessage($chatId,eval('return '.$text.';'));
          exit();
    }
 
    $esempiotastierainline = '[{"text":"Testo","url":"http://yt.alexgaming.me"},{"text":"Inline","switch_inline_query":"Ciao!"}],[{"text":"Testo","callback_data":"StampaMessaggio"},{"text":"Modifica Messaggio","callback_data":"ModificaMessaggio"}]';
 
-  switch($text)
-  {
+  switch($text){
     case "/start":
         sendMessage($chatId,"Weyla!");
         break;
@@ -77,24 +72,20 @@
 
 
 
-  function sendMessage($chatId,$text,$tastiera,$tipo)
-  {
-    if(isset($tastiera))
-    {
-      if($tipo == "fisica")
-      {
-        $tastierino = '&reply_markup={"keyboard":['.$tastiera.'],"resize_keyboard":true}';
+  function sendMessage($chatId,$text,$tastiera,$tipo){
+    if(isset($tastiera)){
+      if($tipo == "fisica"){
+        $tastierino = '&reply_markup={"keyboard":['.urlencode($tastiera).'],"resize_keyboard":true}';
       }
       else {
-        $tastierino = '&reply_markup={"inline_keyboard":['.$tastiera.'],"resize_keyboard":true}';
+        $tastierino = '&reply_markup={"inline_keyboard":['.urlencode($tastiera).'],"resize_keyboard":true}';
       }
     }
     $url = $GLOBALS[website]."/sendMessage?chat_id=$chatId&parse_mode=HTML&text=".urlencode($text).$tastierino;
     file_get_contents($url);
   }
 
-  function answerQuery($callback_query_id,$text)
-  {
+  function answerQuery($callback_query_id,$text){
     $url = $GLOBALS[website]."/answerCallbackQuery?callback_query_id=$callback_query_id&text=".urlencode($text);
     file_get_contents($url);
   }
